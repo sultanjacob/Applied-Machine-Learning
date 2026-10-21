@@ -10,10 +10,10 @@ def load_tflite_model(model_path):
     interpreter.allocate_tensors()
     return interpreter
 
-# Load models
+# Load ALL models via the lightweight TFLite runtime
 mlp_interpreter = load_tflite_model('models/mlp_carbon_flux_quantized.tflite')
 cnn_interpreter = load_tflite_model('models/cnn_spatial_quantized.tflite')
-lstm_model = tf.keras.models.load_model('models/lstm_temporal_forecast_v1.keras')
+lstm_interpreter = load_tflite_model('models/lstm_temporal_quantized.tflite')
 
 # Schemas
 class TabularInput(BaseModel):
@@ -47,7 +47,9 @@ def predict_spatial(data: SpatialInput):
 @app_full.post("/predict/temporal")
 def predict_temporal(data: TemporalInput):
     input_data = np.array([data.time_series], dtype=np.float32)
-    prediction = lstm_model.predict(input_data, verbose=0)[0][0]
+    lstm_interpreter.set_tensor(lstm_interpreter.get_input_details()[0]['index'], input_data)
+    lstm_interpreter.invoke()
+    prediction = lstm_interpreter.get_tensor(lstm_interpreter.get_output_details()[0]['index'])[0][0]
     return {"forecasted_stress_index": float(prediction)}
 
 @app_full.get("/")
