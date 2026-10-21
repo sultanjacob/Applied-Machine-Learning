@@ -43,9 +43,13 @@ with tab2:
 
 with tab3:
     st.subheader("LSTM: Temporal Stress Forecasting")
-    st.write("Simulating a 30-day weather time series (30x5)...")
+    st.write("Simulating a 7-day weather time series (7x3)...")
     
     if st.button("Run Temporal Inference"):
-        dummy_series = np.random.rand(30, 5).tolist()
+        # Adjusted from (30, 5) to (7, 3) to match model training
+        dummy_series = np.random.rand(7, 3).tolist()
         response = requests.post(f"{API_URL}/predict/temporal", json={"time_series": dummy_series})
-        st.json(response.json())
+        if response.status_code == 200:
+            st.json(response.json())
+        else:
+            st.error(f"API Error ({response.status_code}): {response.text}")
