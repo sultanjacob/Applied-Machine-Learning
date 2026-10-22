@@ -1,3 +1,4 @@
+#Importing relevant libraries
 import numpy as np
 import tensorflow as tf
 from fastapi import FastAPI, HTTPException
@@ -15,7 +16,7 @@ mlp_interpreter = load_tflite_model('models/mlp_carbon_flux_quantized.tflite')
 cnn_interpreter = load_tflite_model('models/cnn_spatial_quantized.tflite')
 lstm_interpreter = load_tflite_model('models/lstm_temporal_quantized.tflite')
 
-# Schemas
+# project Schemas
 class TabularInput(BaseModel):
     features: list[float]
 
@@ -25,7 +26,7 @@ class SpatialInput(BaseModel):
 class TemporalInput(BaseModel):
     time_series: list[list[float]]
 
-# Endpoints
+# project endpoints
 @app_full.post("/predict/tabular")
 def predict_tabular(data: TabularInput):
     if len(data.features) != 8:
