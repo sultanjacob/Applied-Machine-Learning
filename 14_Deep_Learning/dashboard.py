@@ -13,7 +13,10 @@ st.title("🌍 Multi-Modal Climate Intelligence")
 st.sidebar.header("System Diagnostics")
 try:
     health = requests.get(f"{API_URL}/")
-    st.sidebar.success(f"API Status: {health.json()['status']}") if health.status_code == 200 else st.sidebar.error("API Error")
+    if health.status_code == 200:
+        st.sidebar.success(f"API Status: {health.json()['status']}")
+    else:
+        st.sidebar.error("API Error")
 except requests.exceptions.ConnectionError:
     st.sidebar.error("API Offline. Check Docker container.")
 
