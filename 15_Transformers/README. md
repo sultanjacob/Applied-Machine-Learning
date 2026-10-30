@@ -1,1 +1,117 @@
+# ⚽ Real-Time Global Football Transfer News Classifier
 
+An end-to-end NLP and heuristic pipeline designed to ingest global football transfer rumors in real time and automatically separate **credible journalism** from **tabloid clickbait**.
+
+---
+
+## 📌 Project Overview
+
+Football transfer reporting is saturated with sensationalism, speculative rumors, and clickbait. This system implements a **Hybrid Architecture** combining:
+1. **Transformer-Based Machine Learning (DistilBERT):** Fine-tuned to evaluate sentence structures, syntax, and phrasing patterns.
+2. **Heuristic Source Overrides (Trust Lists):** Metadata checks that automatically trust verified Tier-1 journalists (e.g., Fabrizio Romano, David Ornstein), bypassing model inference for high-fidelity sources.
+3. **Multi-Stream Data Ingestion:** Real-time ingestion via global RSS feeds (Sky Sports, BBC) and Twitter/X API integrations.
+4. **Interactive Dashboard:** Built with Streamlit for live execution, monitoring, and interactive filtering.
+
+---
+
+## 🏗️ System Architecture
+
+```text
+               +----------------------------------+
+               | Ingestion Layer                  |
+               | - Global RSS Feeds (BBC, Sky)    |
+               | - Twitter/X API (Tier-1 Accounts) |
+               +----------------------------------+
+                                |
+                                v
+               +----------------------------------+
+               | Source Verification Check        |
+               +----------------------------------+
+                 /                              \
+       (Tier-1 Journalist)                  (Generic RSS / Unknown)
+               /                                  \
+              v                                    v
+   +-----------------------+            +-----------------------+
+   | Heuristic Override    |            | Fine-Tuned DistilBERT |
+   | Flag: 🟢 CREDIBLE     |            | Sentence Evaluation   |
+   +-----------------------+            +-----------------------+
+              \                                    /
+               \                                  /
+                v                                v
+               +----------------------------------+
+               | Unified Feed / Streamlit App UI  |
+               +----------------------------------+
+```
+
+---
+
+## 🛠️ Tech Stack & Dependencies
+
+* **Language:** Python 3.10+
+* **NLP & Modeling:** PyTorch, Hugging Face Transformers (`distilbert-base-uncased`)
+* **Data Pipelines & Parsing:** Pandas, NumPy, BeautifulSoup4, `feedparser`, `tweepy`
+* **Deployment & UI:** Streamlit, Gradio
+
+---
+
+## 📂 Repository Structure
+
+```text
+├── transfer_model/           # Saved fine-tuned DistilBERT weights & tokenizer files
+│   ├── config.json
+│   ├── model.safetensors
+│   ├── tokenizer_config.json
+│   └── vocab.txt
+├── app.py                    # Production Streamlit application script
+├── transfer_classifier.ipynb # Core training, data pipeline, & inference notebook
+├── README.md                 # Project documentation
+└── requirements.txt          # Python dependencies
+```
+
+---
+
+## 🚀 Quickstart & Setup
+
+### 1. Clone the Repository & Install Dependencies
+```bash
+git clone [https://github.com/your-username/football-transfer-classifier.git](https://github.com/your-username/football-transfer-classifier.git)
+cd football-transfer-classifier
+pip install -r requirements.txt
+```
+
+### 2. Run the Ingestion & Fine-Tuning Pipeline
+If you want to retrain the DistilBERT model from scratch or test the synthetic data pipeline, launch the Jupyter Notebook:
+```bash
+jupyter notebook transfer_classifier.ipynb
+```
+
+### 3. Launch the Streamlit Web Application
+Ensure your model files are saved in `./transfer_model/`, then launch the app:
+```bash
+streamlit run app.py
+```
+
+---
+
+## 📊 Model Performance & Inference Logic
+
+* **Base Model:** `distilbert-base-uncased`
+* **Task:** Binary Sequence Classification (`1 = Credible Journalism`, `0 = Clickbait / Rumor`)
+* **Linguistic Triggers:**
+  * **Credible (`1`):** *“Medical booked”*, *“Full agreement reached”*, *“Official announcement”*, *“Contract signed until...”*
+  * **Clickbait (`0`):** *“MEGA SWOOP”*, *“Explosive bust-up”*, *“Plotting insane bid”*, *“Shocking report”*
+
+---
+
+## 🚧 Roadmap & Future Enhancements
+
+- [x] Synthetic dataset generation & balance fine-tuning.
+- [x] Hugging Face DistilBERT fine-tuning loop.
+- [x] Multi-source live ingestion (RSS + Social Media).
+- [x] Heuristic Source Override for Tier-1 journalists.
+- [x] Standalone Streamlit application script.
+- [ ] Multi-language support (Spanish *Marca*, French *L'Équipe*, Italian *Di Marzio*).
+- [ ] Automated database storage (PostgreSQL/SQLite) for historical rumor tracking.
+- [ ] Browser Extension wrapper for X (Twitter) & Reddit feeds.
+
+---
