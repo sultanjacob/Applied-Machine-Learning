@@ -70,7 +70,7 @@ Football transfer reporting is saturated with sensationalism, speculative rumors
 
 ---
 
-## 🚀 Quickstart & Setup
+##  Quickstart & Setup
 
 ### 1. Clone the Repository & Install Dependencies
 ```bash
@@ -93,7 +93,7 @@ streamlit run app.py
 
 ---
 
-## 📊 Model Performance & Inference Logic
+##  Model Performance & Inference Logic
 
 * **Base Model:** `distilbert-base-uncased`
 * **Task:** Binary Sequence Classification (`1 = Credible Journalism`, `0 = Clickbait / Rumor`)
